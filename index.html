@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>owa — Korean Shaved Snow for Every Celebration</title>
+<meta name="description" content="owa brings Korean shaved snow to your next celebration. Send a booking inquiry to get started.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --blush-light: #fbe4dd;
+    --blush-deep: #f6d5c9;
+    --strawberry: #e0526b;
+    --strawberry-dark: #c73e58;
+    --plum: #3a2a2e;
+    --cream: #fffaf7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--plum);
+    background: var(--cream);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img, iframe { max-width: 100%; }
+
+  /* ---------- Hero (single view, full-bleed background) ---------- */
+
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(32px, 8vw, 64px) 20px;
+    background:
+      url('background.jpg') center/cover no-repeat,
+      linear-gradient(135deg, var(--blush-light), var(--blush-deep));
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+  }
+
+  .brand {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    color: var(--strawberry-dark);
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-shadow: 0 4px 0 rgba(255,255,255,0.5);
+  }
+
+  .brand-logo {
+    display: block;
+    max-height: clamp(144px, 32vw, 220px);
+    width: auto;
+    margin: 0 auto;
+  }
+
+  .headline {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    color: #ffffff;
+    margin-top: 20px;
+    line-height: 1.15;
+    text-shadow: 0 2px 14px rgba(58,42,46,0.35), 0 1px 0 rgba(58,42,46,0.25);
+  }
+
+  .subtext {
+    margin-top: 12px;
+    font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+    font-weight: 500;
+    color: var(--strawberry-dark);
+  }
+
+  /* ---------- Form Card ---------- */
+
+  .card {
+    margin-top: 28px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(6px);
+    border-radius: 28px;
+    padding: clamp(22px, 5vw, 34px);
+    box-shadow: 0 16px 48px rgba(58, 42, 46, 0.18);
+    text-align: left;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .field-row .field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--strawberry-dark);
+    margin-bottom: 5px;
+    padding-left: 4px;
+  }
+
+  input, textarea {
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: var(--plum);
+    background: #fff;
+    border: 2px solid var(--blush-deep);
+    border-radius: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--strawberry);
+  }
+
+  .optional-tag {
+    font-weight: 400;
+    color: var(--plum);
+    opacity: 0.5;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 15px;
+    background: var(--strawberry);
+    color: #fff;
+    border: none;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(224, 82, 107, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .submit-btn:hover,
+  .submit-btn:focus-visible {
+    background: var(--strawberry-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(199, 62, 88, 0.4);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .form-status {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    text-align: center;
+    display: none;
+  }
+
+  .form-status.error {
+    display: block;
+    color: var(--strawberry-dark);
+  }
+
+  .success-message {
+    display: none;
+    text-align: center;
+    padding: 20px 6px;
+  }
+
+  .success-message.visible {
+    display: block;
+  }
+
+  .success-message .headline {
+    color: var(--strawberry-dark);
+    text-shadow: none;
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+  }
+
+  .success-message p {
+    margin-top: 10px;
+    opacity: 0.75;
+  }
+
+  .footnote {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: var(--plum);
+    opacity: 0.55;
+    text-align: center;
+  }
+
+  /* ---------- Footer ---------- */
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8rem;
+    opacity: 0.55;
+    background: var(--cream);
+  }
+
+  @media (max-width: 420px) {
+    .field-row { flex-direction: column; gap: 0; }
+    .card { border-radius: 20px; }
+  }
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-content">
+      <img src="logo.png" alt="owa" class="brand-logo">
+      <h1 class="headline">Korean Shaved Snow<br>for Every Celebration</h1>
+      <p class="subtext">Send a booking inquiry to reserve your date</p>
+
+      <div class="card" id="booking">
+        <form id="booking-form" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="field">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone <span class="optional-tag">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="(000) 000-0000">
+          </div>
+
+          <div class="field">
+            <label for="eventDate">Date of Event</label>
+            <input type="date" id="eventDate" name="eventDate" required>
+          </div>
+
+          <div class="field">
+            <label for="guests">Number of Guests</label>
+            <input type="number" id="guests" name="guests" min="1" value="1" required>
+          </div>
+
+          <div class="field">
+            <label for="comments">Comments <span class="optional-tag">(optional)</span></label>
+            <textarea id="comments" name="comments"></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-btn">Save My Scoop</button>
+          <div class="form-status" id="form-status"></div>
+          <p class="footnote">We'll follow up by email to confirm your booking.</p>
+        </form>
+
+        <div class="success-message" id="success-message">
+          <div class="headline">You're on the list! 🍧</div>
+          <p>Thanks for reaching out — we'll email you shortly to confirm your booking.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> owa. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('booking-form');
+    const statusEl = document.getElementById('form-status');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.className = 'form-status';
+      statusEl.textContent = '';
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const res = await fetch('/api/submit-booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) throw new Error('Submission failed');
+
+        form.style.display = 'none';
+        successMessage.classList.add('visible');
+      } catch (err) {
+        statusEl.textContent = "Something went wrong — please try again, or email us directly.";
+        statusEl.className = 'form-status error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save My Scoop';
+      }
+    });
+  </script>
+
+</body>
+</html>
