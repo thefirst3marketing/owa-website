@@ -30,7 +30,7 @@ async function sendNotificationEmail(data) {
     <p><strong>Name:</strong> ${firstName} ${lastName}</p>
     <p><strong>Email:</strong> ${email}</p>
     <p><strong>Phone:</strong> ${phone || '(not provided)'}</p>
-    <p><strong>Date of Event:</strong> ${eventDate}</p>
+    <p><strong>Date of Event:</strong> ${eventDate || '(not provided)'}</p>
     <p><strong>Number of Guests:</strong> ${guests}</p>
     <p><strong>Comments:</strong> ${comments || '(none)'}</p>
   `;
@@ -92,13 +92,16 @@ module.exports = async (req, res) => {
     comments = ''
   } = body || {};
 
-  if (!firstName || !lastName || !email || !eventDate || !guests) {
+  if (!firstName || !lastName || !email || !guests) {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
 
-  // eventDate comes in as YYYY-MM-DD from the HTML date input.
-  const [year, month, day] = eventDate.split('-');
+  // eventDate is optional and comes in as YYYY-MM-DD from the HTML date input.
+  let year = '', month = '', day = '';
+  if (eventDate) {
+    [year, month, day] = eventDate.split('-');
+  }
 
   // Field mapping pulled from this form's live structure via the Jotform API
   // (GET /form/251345001732141/questions):
@@ -113,9 +116,11 @@ module.exports = async (req, res) => {
   params.append('submission[4_last]', lastName);
   params.append('submission[5]', email);
   if (phone) params.append('submission[6_full]', phone);
-  params.append('submission[7_month]', month);
-  params.append('submission[7_day]', day);
-  params.append('submission[7_year]', year);
+  if (eventDate) {
+    params.append('submission[7_month]', month);
+    params.append('submission[7_day]', day);
+    params.append('submission[7_year]', year);
+  }
   params.append('submission[10]', String(guests));
   if (comments) params.append('submission[14]', comments);
 
