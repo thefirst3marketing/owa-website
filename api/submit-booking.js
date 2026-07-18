@@ -3,11 +3,61 @@
 // via their API, so submissions still land in your Jotform inbox/dashboard
 // exactly as before — but visitors only ever see your own custom-styled form.
 //
-// Requires an environment variable JOTFORM_API_KEY to be set in your Vercel
-// project settings (Settings -> Environment Variables). Never hardcode the
-// key here or commit it to the repo.
+// Jotform's API doesn't trigger their own notification/autoresponder emails
+// (those only fire for submissions made through Jotform's own hosted form),
+// so this function also sends you a direct notification email via Resend
+// right after the booking is saved to Jotform.
+//
+// Requires two environment variables set in Vercel (Settings -> Environment
+// Variables). Never hardcode either key here or commit it to the repo:
+//   JOTFORM_API_KEY - from Jotform Settings -> API
+//   RESEND_API_KEY  - from resend.com -> API Keys
 
 const JOTFORM_FORM_ID = '251345001732141';
+const NOTIFY_EMAIL = 'tesiakuh@gmail.com';
+
+async function sendNotificationEmail(data) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) {
+    console.error('Missing RESEND_API_KEY environment variable — skipping notification email');
+    return;
+  }
+
+  const { firstName, lastName, email, phone, eventDate, guests, comments } = data;
+
+  const html = `
+    <h2>New Booking Inquiry — owa</h2>
+    <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Phone:</strong> ${phone || '(not provided)'}</p>
+    <p><strong>Date of Event:</strong> ${eventDate}</p>
+    <p><strong>Number of Guests:</strong> ${guests}</p>
+    <p><strong>Comments:</strong> ${comments || '(none)'}</p>
+  `;
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'owa Bookings <onboarding@resend.dev>',
+        to: [NOTIFY_EMAIL],
+        subject: `New Booking Inquiry from ${firstName} ${lastName}`,
+        html
+      })
+    });
+
+    if (!res.ok) {
+      const detail = await res.text();
+      console.error('Resend notification email failed:', detail);
+    }
+  } catch (err) {
+    console.error('Error sending notification email:', err);
+  }
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -86,6 +136,8 @@ module.exports = async (req, res) => {
       res.status(502).json({ error: 'Jotform rejected the submission', detail: result });
       return;
     }
+
+    await sendNotificationEmail({ firstName, lastName, email, phone, eventDate, guests, comments });
 
     res.status(200).json({ ok: true, submissionId: result.content?.submissionID || null });
   } catch (err) {
